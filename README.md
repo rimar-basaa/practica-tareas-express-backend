@@ -1,3 +1,3 @@
-# Tareas - express
+# Backend Tareas - express
 ### Practica en desarrollo
-- Practica de caracter educacional de realizacion de Aplicacion Tareas con Express JS.
+- Practica de caracter educacional de realizacion de Backend para Tareas con Express JS.
