@@ -10,13 +10,13 @@ const getTareas = () => {
     return tareas;
 };
 
-// mostrando todo el array
+// mostrando todas las tareas
 app.get("/tareas", (req, res) => {
     const tareas = getTareas();// trae tareas desde la funcion
     res.json(tareas);
 });
 
-// buscando tarea especifica segun parametro enviado :id
+// mostrando tarea especifica segun parametro enviado :id
 app.get("/tareas/:id", (req, res) => {
     const tareas = getTareas();// trae tareas desde la funcion
     const id = req.params.id;
@@ -29,7 +29,7 @@ app.get("/tareas/:id", (req, res) => {
     };
 });
 
-// agregando tareas
+// agregando tarea
 app.post("/tareas", (req, res) => {
     const { tarea } = req.body;
     const id = Math.floor(Math.random() * 9999);
@@ -44,29 +44,39 @@ app.post("/tareas", (req, res) => {
     res.status(201).json(nuevaTarea);
 });
 
-// modificando tareas
+// modificando tarea especifica segun parametro enviado :id
 app.put("/tareas/:id", (req, res) => {
     const id = req.params.id;
+    const { tarea } = req.body;
     let tareas = getTareas();// trae tareas desde la funcion
-    const tarea = tareas.find((tarea) => tarea.id === parseInt(id));
+    const index = tareas.findIndex((tarea) => tarea.id === parseInt(id));
 
     if (!tarea){
         res.status(404).json({mensaje: "Tarea NO encontrada"});
     } else {
-        tareas = tareas.map((tarea) => {
-            if (tarea.id === id) {
-            return { ...tarea, done: !tarea.done };
-            }
-            return tarea;
-        });
+        tareas[index].tarea = tarea;
     };
 
     fs.writeFileSync("tareas.json", JSON.stringify(tareas));
     res.json(tareas);
-
 });
 
-// eliminando tareas
+// eliminando tarea especifica segun parametro enviado :id
+app.delete("/tareas/:id", (req, res) =>{
+    const id = req.params.id;
+    const { tarea } = req.body;
+    let tareas = getTareas();// trae tareas desde la funcion
+    const index = tareas.findIndex((tarea) => tarea.id === parseInt(id));
+
+    if (!tarea){
+        res.status(404).json({mensaje: "Tarea NO encontrada"});
+    } else {
+        tareas.splice(index, 1);
+    };
+
+    fs.writeFileSync("tareas.json", JSON.stringify(tareas));
+    res.json(tareas);
+});
 
 // corriendo servidor
 const PORT = process.env.PORT || 3000;
